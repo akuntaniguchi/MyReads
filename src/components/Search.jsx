@@ -8,6 +8,7 @@ class Search extends Component {
   state = {
     input: '',
     newBooks: [],
+    error: false
   };
 
   getBooks = event => {
@@ -17,16 +18,27 @@ class Search extends Component {
     if(input) {
       BooksAPI.search(input).then(books => {
         if(books.length > 0) {
-          this.setState({ newBooks: books});
+          this.setState({ 
+            newBooks: books, 
+            error: false
+          });
         } else {
-          this.setState({ newBooks: [] });
+          this.setState({ 
+            newBooks: [], 
+            error: true 
+          });
         }
       });
-    } 
+    } else {
+      this.setState({ 
+        newBooks: [], 
+        error: true
+      })
+    }
   };
 
   render() {
-    const { input, newBooks } = this.state;
+    const { input, newBooks, error } = this.state;
     const { books, changeShelf } = this.props;
 
     return (
@@ -53,6 +65,9 @@ class Search extends Component {
                 ))}
               </ol>
             </div>
+          )}
+          {error && (
+            <h2>Books not found</h2>
           )}
         </div>
       </div>
